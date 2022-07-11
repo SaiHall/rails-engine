@@ -4,3 +4,4 @@ FactoryBot.define do
       name { Faker::JapaneseMedia::StudioGhibli.character }
     end
   end
+end
