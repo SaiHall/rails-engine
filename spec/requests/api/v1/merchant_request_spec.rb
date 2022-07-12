@@ -2,22 +2,25 @@ require 'rails_helper'
 
 RSpec.describe "E-Commerce API" do
   it "sends details of one merchant" do
-    create_list(:merchant, 2)
+    id1 = create(:merchant)
+    id2 = create(:merchant)
 
-    id = Merchant.all.first.id
-
-    get "/api/v1/merchants/#{id}"
+    get "/api/v1/merchants/#{id1.id}"
 
     expect(response).to be_successful
+    expect(response.status).to eq(200)
 
     response_body = JSON.parse(response.body, symbolize_names: true)
     merchant = response_body[:data]
 
+    expect(merchant).to be_a(Hash)
     expect(merchant[:attributes]).to have_key(:name)
     expect(merchant[:attributes][:name]).to be_a(String)
 
     expect(merchant).to have_key(:id)
     expect(merchant[:id]).to be_a(String)
+    expect(merchant[:id]).to eq("#{id1.id}")
+    expect(merchant[:id]).to_not eq("#{id2.id}")
 
     expect(merchant[:attributes]).to_not have_key(:created_at)
   end
