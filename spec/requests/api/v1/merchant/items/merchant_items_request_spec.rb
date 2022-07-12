@@ -13,6 +13,7 @@ RSpec.describe "E-Commerce API: merchant/items" do
     items = response_body[:data]
 
     expect(items).to be_a(Array)
+    expect(items.count).to eq(4)
 
     items.each do |item|
       expect(item).to have_key(:id)
@@ -33,7 +34,7 @@ RSpec.describe "E-Commerce API: merchant/items" do
       expect(item[:attributes]).to have_key(:unit_price)
       expect(item[:attributes][:unit_price]).to be_a(Float)
 
-      expect(item[:attributes]).to have_key(:merchant_id)      
+      expect(item[:attributes]).to have_key(:merchant_id)
       expect(item[:attributes][:merchant_id]).to be_an(Integer)
     end
   end
