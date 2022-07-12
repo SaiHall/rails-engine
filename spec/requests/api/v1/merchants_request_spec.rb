@@ -18,7 +18,7 @@ RSpec.describe "E-Commerce API" do
       expect(merchant[:attributes][:name]).to be_a(String)
 
       expect(merchant).to have_key(:id)
-      expect(merchant[:id]).to be_an(Integer)
+      expect(merchant[:id]).to be_a(String)
 
       expect(merchant[:attributes]).to_not have_key(:created_at)
     end
