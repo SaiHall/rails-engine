@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "E-Commerce API: Items" do
   it 'sends all items' do
-    create_list(:items, 10)
+    create_list(:merchant, 3)
 
     get "/api/v1/items"
 
