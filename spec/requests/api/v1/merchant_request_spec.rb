@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "E-Commerce API" do
+RSpec.describe "E-Commerce API: Merchant" do
   it "sends details of one merchant" do
     id1 = create(:merchant)
     id2 = create(:merchant)
