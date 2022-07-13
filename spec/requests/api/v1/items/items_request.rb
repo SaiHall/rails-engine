@@ -45,4 +45,55 @@ RSpec.describe "E-Commerce API: Items" do
     expect(response).to_not be_successful
     expect(response.status).to eq(404)
   end
+
+  it 'can create a new item' do
+    create_list(:merchant, 1)
+
+    merchant_id = Merchant.all.first.id
+
+    item_params = ({
+    "name": "Humidifier",
+    "description": "From KFC",
+    "unit_price": 50.00,
+    "merchant_id": merchant_id
+    })
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response).to be_successful
+    expect(response.status).to eq(201)
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    item = response_body[:data]
+
+    created_item = Item.last
+
+    expect(created_item.name).to eq(item_params[:name])
+    expect(created_item.description).to eq(item_params[:description])
+    expect(created_item.unit_price).to eq(item_params[:unit_price])
+    expect(created_item.merchant_id).to eq(item_params[:merchant_id])
+    expect(item[:attributes][:name]).to eq(item_params[:name])
+    expect(item[:attributes][:description]).to eq(item_params[:description])
+    expect(item[:attributes][:unit_price]).to eq(item_params[:unit_price])
+    expect(item[:attributes][:merchant_id]).to eq(item_params[:merchant_id])
+  end
+
+  it 'will show the correct error if information is missing' do
+    create_list(:merchant, 1)
+
+    merchant_id = Merchant.all.first.id
+
+    item_params = ({
+    "name": "Humidifier",
+    "description": "From KFC",
+    "merchant_id": merchant_id
+    })
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response).to_not be_successful
+    expect(response.status).to eq(422)
+  end
 end
