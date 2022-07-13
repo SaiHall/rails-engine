@@ -43,11 +43,31 @@ RSpec.describe "E-Commerce API: Item" do
   end
 
   it 'returns error message if item id is invalid' do
-    get "/api/v1/merchants/1"
+    get "/api/v1/items/1"
 
     expect(response).to_not be_successful
 
     response_body = JSON.parse(response.body, symbolize_names: true)
     expect(response_body).to have_key(:message)
+  end
+
+  it 'can create a new item' do
+    create_list(:merchant, 1)
+
+    merchant_id = Merchant.all.first.id
+
+    item_params = ({
+    "name": "Humidifier",
+    "description": "From KFC",
+    "unit_price": "50.00",
+    "merchant_id": merchant_id
+    })
+
+    post "/api/v1/items/5", headers: headers, params: JSON.generate(item: item_params)
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    item = response_body[:data]
+
+
   end
 end
