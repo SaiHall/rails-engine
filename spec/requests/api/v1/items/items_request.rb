@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe "E-Commerce API: merchant/items" do
-  it "sends the items from one merchant" do
-    id1 = create(:merchant)
+RSpec.describe "E-Commerce API: Items" do
+  it 'sends all items' do
+    create_list(:merchant, 3)
 
-    get "/api/v1/merchants/#{id1.id}/items"
+    get "/api/v1/items"
 
     expect(response).to be_successful
     expect(response.status).to eq(200)
@@ -13,6 +13,7 @@ RSpec.describe "E-Commerce API: merchant/items" do
     items = response_body[:data]
 
     expect(items).to be_a(Array)
+    expect(items.count).to eq(12)
 
     items.each do |item|
       expect(item).to have_key(:id)
@@ -33,8 +34,15 @@ RSpec.describe "E-Commerce API: merchant/items" do
       expect(item[:attributes]).to have_key(:unit_price)
       expect(item[:attributes][:unit_price]).to be_a(Float)
 
-      expect(item[:attributes]).to have_key(:merchant_id)      
+      expect(item[:attributes]).to have_key(:merchant_id)
       expect(item[:attributes][:merchant_id]).to be_an(Integer)
     end
+  end
+
+  it 'returns 404 error code if there are no items' do
+    get "/api/v1/items"
+
+    expect(response).to_not be_successful
+    expect(response.status).to eq(404)
   end
 end
