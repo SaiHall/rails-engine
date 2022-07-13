@@ -59,15 +59,24 @@ RSpec.describe "E-Commerce API: Item" do
     item_params = ({
     "name": "Humidifier",
     "description": "From KFC",
-    "unit_price": "50.00",
+    "unit_price": 50.00,
     "merchant_id": merchant_id
     })
+    headers = {"CONTENT_TYPE" => "application/json"}
 
-    post "/api/v1/items/5", headers: headers, params: JSON.generate(item: item_params)
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response).to be_successful
+    expect(response.status).to eq(201)
 
     response_body = JSON.parse(response.body, symbolize_names: true)
     item = response_body[:data]
 
+    created_item = Item.last
 
+    expect(created_item.name).to eq(item_params[:name])
+    expect(created_item.description).to eq(item_params[:description])
+    expect(created_item.unit_price).to eq(item_params[:unit_price])
+    expect(created_item.merchant_id).to eq(item_params[:merchant_id])
   end
 end
