@@ -25,7 +25,7 @@ RSpec.describe "E-Commerce API: Merchants" do
     end
   end
 
-  it 'returns 404 error code if there are no merchants' do
+  it 'returns empty data if there are no merchants' do
     get "/api/v1/merchants"
 
     response_body = JSON.parse(response.body, symbolize_names: true)

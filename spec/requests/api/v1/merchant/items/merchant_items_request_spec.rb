@@ -51,7 +51,7 @@ RSpec.describe "E-Commerce API: merchant/items" do
     expect(items).to eq([])
   end
 
-  it 'returns 404 error code if merchant id is invalid' do
+  it 'returns error message if merchant id is invalid' do
     get "/api/v1/merchants/1/items"
 
     expect(response).to_not be_successful

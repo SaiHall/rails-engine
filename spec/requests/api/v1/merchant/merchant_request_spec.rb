@@ -24,4 +24,13 @@ RSpec.describe "E-Commerce API: Merchant" do
 
     expect(merchant[:attributes]).to_not have_key(:created_at)
   end
+
+  it 'returns error message if merchant id is invalid' do
+    get "/api/v1/merchants/1"
+
+    expect(response).to_not be_successful
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    expect(response_body).to have_key(:message)
+  end
 end
