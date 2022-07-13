@@ -43,11 +43,77 @@ RSpec.describe "E-Commerce API: Item" do
   end
 
   it 'returns error message if item id is invalid' do
-    get "/api/v1/merchants/1"
+    get "/api/v1/items/1"
 
     expect(response).to_not be_successful
 
     response_body = JSON.parse(response.body, symbolize_names: true)
     expect(response_body).to have_key(:message)
+  end
+
+  it 'can create a new item' do
+    create_list(:merchant, 1)
+
+    merchant_id = Merchant.all.first.id
+
+    item_params = ({
+    "name": "Humidifier",
+    "description": "From KFC",
+    "unit_price": 50.00,
+    "merchant_id": merchant_id
+    })
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response).to be_successful
+    expect(response.status).to eq(201)
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    item = response_body[:data]
+
+    created_item = Item.last
+
+    expect(created_item.name).to eq(item_params[:name])
+    expect(created_item.description).to eq(item_params[:description])
+    expect(created_item.unit_price).to eq(item_params[:unit_price])
+    expect(created_item.merchant_id).to eq(item_params[:merchant_id])
+    expect(item[:attributes][:name]).to eq(item_params[:name])
+    expect(item[:attributes][:description]).to eq(item_params[:description])
+    expect(item[:attributes][:unit_price]).to eq(item_params[:unit_price])
+    expect(item[:attributes][:merchant_id]).to eq(item_params[:merchant_id])
+  end
+
+  it 'will show the correct error if information is missing' do
+    create_list(:merchant, 1)
+
+    merchant_id = Merchant.all.first.id
+
+    item_params = ({
+    "name": "Humidifier",
+    "description": "From KFC",
+    "merchant_id": merchant_id
+    })
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response).to_not be_successful
+    expect(response.status).to eq(422)
+  end
+
+  it 'can delete an item' do
+      create_list(:merchant, 1)
+
+      item1 = Item.all.first
+      merchant = Merchant.all.first
+
+      expect(merchant.items.count).to eq(4)
+
+      delete "/api/v1/items/#{item1.id}"
+
+      expect(response).to be_successful
+      expect(response.status).to eq(204)
+      expect(merchant.items.count).to eq(3)
   end
 end
