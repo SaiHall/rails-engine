@@ -101,4 +101,18 @@ RSpec.describe "E-Commerce API: Item" do
     expect(response).to_not be_successful
     expect(response.status).to eq(422)
   end
+
+  it 'can delete an item' do
+      create_list(:merchant, 1)
+
+      item1 = Item.all.first
+      item2 = Item.all.second
+      item3 = Item.all.third
+      item4 = Item.all.last
+
+      delete "/api/v1/items/#{item1.id}"
+
+      expect(response).to be_successful
+      expect(response.status).to eq(204)
+  end
 end
