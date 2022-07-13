@@ -106,13 +106,14 @@ RSpec.describe "E-Commerce API: Item" do
       create_list(:merchant, 1)
 
       item1 = Item.all.first
-      item2 = Item.all.second
-      item3 = Item.all.third
-      item4 = Item.all.last
+      merchant = Merchant.all.first
+
+      expect(merchant.items.count).to eq(4)
 
       delete "/api/v1/items/#{item1.id}"
 
       expect(response).to be_successful
       expect(response.status).to eq(204)
+      expect(merchant.items.count).to eq(3)
   end
 end
