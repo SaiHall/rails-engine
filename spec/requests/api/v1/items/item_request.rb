@@ -78,5 +78,27 @@ RSpec.describe "E-Commerce API: Item" do
     expect(created_item.description).to eq(item_params[:description])
     expect(created_item.unit_price).to eq(item_params[:unit_price])
     expect(created_item.merchant_id).to eq(item_params[:merchant_id])
+    expect(item[:attributes][:name]).to eq(item_params[:name])
+    expect(item[:attributes][:description]).to eq(item_params[:description])
+    expect(item[:attributes][:unit_price]).to eq(item_params[:unit_price])
+    expect(item[:attributes][:merchant_id]).to eq(item_params[:merchant_id])
+  end
+
+  it 'will show the correct error if information is missing' do
+    create_list(:merchant, 1)
+
+    merchant_id = Merchant.all.first.id
+
+    item_params = ({
+    "name": "Humidifier",
+    "description": "From KFC",
+    "merchant_id": merchant_id
+    })
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response).to_not be_successful
+    expect(response.status).to eq(422)
   end
 end
