@@ -33,9 +33,16 @@ RSpec.describe "E-Commerce API: Items" do
 
       expect(item[:attributes]).to have_key(:unit_price)
       expect(item[:attributes][:unit_price]).to be_a(Float)
-      
+
       expect(item[:attributes]).to have_key(:merchant_id)
       expect(item[:attributes][:merchant_id]).to be_an(Integer)
     end
+  end
+
+  it 'returns error if there are no items' do
+    get "/api/v1/items"
+
+    expect(response).to_not be_successful
+    expect(response.status).to eq(404)
   end
 end

@@ -38,4 +38,22 @@ RSpec.describe "E-Commerce API: merchant/items" do
       expect(item[:attributes][:merchant_id]).to be_an(Integer)
     end
   end
+
+  it 'returns empty data if merchant has no items' do
+    id1 = Merchant.create!(name: "Jimbob Dudeguy")
+    get "/api/v1/merchants/#{id1.id}/items"
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    items = response_body[:data]
+
+    expect(response).to be_successful
+    expect(response.status).to eq(200)
+    expect(items).to eq([])
+  end
+
+  it 'returns 404 error code if merchant id is invalid' do
+    get "/api/v1/merchants/1/items"
+
+    expect(response).to_not be_successful
+  end
 end
