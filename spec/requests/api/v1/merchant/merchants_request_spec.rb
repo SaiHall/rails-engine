@@ -24,4 +24,15 @@ RSpec.describe "E-Commerce API: Merchants" do
       expect(merchant[:attributes]).to_not have_key(:created_at)
     end
   end
+
+  it 'returns 404 error code if there are no merchants' do
+    get "/api/v1/merchants"
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    merchants = response_body[:data]
+
+    expect(response).to be_successful
+    expect(response.status).to eq(200)
+    expect(merchants).to eq([])
+  end
 end

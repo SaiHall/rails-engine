@@ -55,5 +55,8 @@ RSpec.describe "E-Commerce API: merchant/items" do
     get "/api/v1/merchants/1/items"
 
     expect(response).to_not be_successful
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    expect(response_body).to have_key(:message)
   end
 end
