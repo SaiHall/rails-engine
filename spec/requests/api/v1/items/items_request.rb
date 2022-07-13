@@ -39,7 +39,7 @@ RSpec.describe "E-Commerce API: Items" do
     end
   end
 
-  it 'returns error if there are no items' do
+  it 'returns 404 error code if there are no items' do
     get "/api/v1/items"
 
     expect(response).to_not be_successful
