@@ -11,7 +11,11 @@ class Api::V1::ItemsController < ApplicationController
 
   def create
     item = Item.new(item_params)
-    render json: ItemSerializer.format_item(item), status: 201 if item.save
+    if item.save
+      render json: ItemSerializer.format_item(item), status: 201
+    else
+      render json: item.errors, status: :unprocessable_entity
+    end
   end
 
   private
