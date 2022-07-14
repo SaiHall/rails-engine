@@ -5,4 +5,8 @@ class Item < ApplicationRecord
   validates_presence_of :merchant_id
 
   belongs_to :merchant
+
+  def self.search(query)
+    where("name ILIKE ?", "%#{query}%").order(:name)
+  end
 end
