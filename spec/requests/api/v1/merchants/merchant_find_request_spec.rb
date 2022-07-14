@@ -29,6 +29,15 @@ RSpec.describe "E-Commerce API: Merchant Find" do
     expect(merchant[:id]).to be_a(String)
   end
 
+  it 'will return an empty data response if no match found' do
+    get "/api/v1/merchants/find?name=ring"
+    response_body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_successful
+    expect(response.status).to eq(200)
+    expect(response_body).to have_key(:data)
+  end
+
   it 'will return an error without a parameter' do
     create_list(:merchant, 5)
     Merchant.create!(name: "Turing")
