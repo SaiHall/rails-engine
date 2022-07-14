@@ -79,6 +79,27 @@ RSpec.describe "E-Commerce API: Items" do
     expect(item[:attributes][:merchant_id]).to eq(item_params[:merchant_id])
   end
 
+  it 'will exclude attributes that are not required' do
+    create_list(:merchant, 1)
+
+    merchant_id = Merchant.all.first.id
+
+    item_params = ({
+    "name": "Humidifier",
+    "description": "From KFC",
+    "color": "blue",
+    "unit_price": 50.00,
+    "merchant_id": merchant_id
+    })
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    created_item = Item.last
+
+    expect(created_item.attributes).to_not have_key([:color])
+  end
+
   it 'will show the correct error if information is missing' do
     create_list(:merchant, 1)
 
