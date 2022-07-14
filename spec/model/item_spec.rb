@@ -42,5 +42,20 @@ RSpec.describe Item, type: :model do
       expect(example2).to eq([it3])
       expect(example3).to eq([it1, it2, it3])
     end
+
+    it 'search min returns an array of items with unit_prices higher than argument' do
+      merchant = Merchant.create!(name: "SomeStore WithsumStuff")
+      it1 = Item.create!(name: "Bubbles", description: "Soapy, shiny, bubbly bubbles", unit_price: 99.90, merchant_id: merchant.id)
+      it2 = Item.create!(name: "Cheese", description: "Da cheddar", unit_price: 10.99, merchant_id: merchant.id)
+      it3 = Item.create!(name: "Fabreeze", description: "Smells like sunshine", unit_price: 100.99, merchant_id: merchant.id)
+
+      example = Item.search_max("50")
+      example2 = Item.search_max("100")
+      example3 = Item.search_max("0")
+
+      expect(example).to eq([it2])
+      expect(example2).to eq([it1, it2])
+      expect(example3).to eq([])
+    end
   end
 end
