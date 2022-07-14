@@ -34,13 +34,6 @@ RSpec.describe "E-Commerce API: Items" do
     end
   end
 
-  it 'returns 404 error code if there are no items' do
-    get "/api/v1/items"
-
-    expect(response).to_not be_successful
-    expect(response.status).to eq(404)
-  end
-
   it 'can create a new item' do
     create_list(:merchant, 1)
 

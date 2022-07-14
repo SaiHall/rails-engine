@@ -110,10 +110,11 @@ RSpec.describe "E-Commerce API: Item" do
     headers = {"CONTENT_TYPE" => "application/json"}
 
       patch "/api/v1/items/#{item1.id}", headers: headers, params: JSON.generate(item: item_params)
+
       response_body = JSON.parse(response.body, symbolize_names: true)
-      item = response_body[:data]
 
       expect(response).to_not be_successful
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(400)
+      expect(response_body[:message]).to eq('Validation failed: Merchant must exist')
   end
 end
