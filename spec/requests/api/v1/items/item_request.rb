@@ -99,4 +99,21 @@ RSpec.describe "E-Commerce API: Item" do
       expect(item).to have_key(:attributes)
       expect(item[:attributes].keys).to eq([:name, :description, :unit_price, :merchant_id])
   end
+
+  it 'will only accept a valid merchant id' do
+    create_list(:merchant, 1)
+    item1 = Item.all.first
+
+    item_params = ({
+    "merchant_id": 999999999999
+    })
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/#{item1.id}", headers: headers, params: JSON.generate(item: item_params)
+      response_body = JSON.parse(response.body, symbolize_names: true)
+      item = response_body[:data]
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(404)
+  end
 end

@@ -74,7 +74,7 @@ RSpec.describe "E-Commerce API: Items" do
     expect(item[:attributes][:merchant_id]).to eq(item_params[:merchant_id])
   end
 
-  it 'will exclude attributes that are not required' do
+  it 'create: will exclude attributes that are not required' do
     create_list(:merchant, 1)
 
     merchant_id = Merchant.all.first.id
@@ -95,7 +95,7 @@ RSpec.describe "E-Commerce API: Items" do
     expect(created_item.attributes).to_not have_key([:color])
   end
 
-  it 'will show the correct error if information is missing' do
+  it 'create: will show the correct error if information is missing' do
     create_list(:merchant, 1)
 
     merchant_id = Merchant.all.first.id
