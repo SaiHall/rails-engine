@@ -1,6 +1,12 @@
 class Api::V1::Merchants::SearchController < ApplicationController
 
-  def index
+  def show
+    merchant = Merchant.search(search_params).first
+    render json: MerchantSerializer.format_merchant(merchant)
   end
 
+  private
+  def search_params
+    params.require(:name)
+  end
 end
