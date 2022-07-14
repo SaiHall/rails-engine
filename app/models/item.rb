@@ -12,6 +12,5 @@ class Item < ApplicationRecord
 
   def self.search_min(query)
     where("unit_price > ?", "#{query}").order(:name)
-
   end
 end
