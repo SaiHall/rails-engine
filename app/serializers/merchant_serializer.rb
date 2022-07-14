@@ -25,4 +25,10 @@ class MerchantSerializer
       }
     }
   end
+
+  def self.no_match
+    {
+      data: nil
+    }
+  end
 end
