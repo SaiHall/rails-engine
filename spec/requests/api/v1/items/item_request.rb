@@ -68,9 +68,7 @@ RSpec.describe "E-Commerce API: Item" do
 
   it 'can update an item' do
     create_list(:merchant, 1)
-
     item1 = Item.all.first
-    original = item1.attributes
 
     item_params = ({
     "name": "Humidifier"
@@ -79,8 +77,33 @@ RSpec.describe "E-Commerce API: Item" do
 
       patch "/api/v1/items/#{item1.id}", headers: headers, params: JSON.generate(item: item_params)
 
+      updated_item = Item.all.first
 
     expect(response).to be_successful
     expect(response.status).to eq(200)
+    expect(updated_item.name).to eq("Humidifier")
+    expect(updated_item.description).to eq(item1.description)
+  end
+
+  it 'returns the record that was updated' do
+    create_list(:merchant, 1)
+    item1 = Item.all.first
+
+    item_params = ({
+    "unit_price": 50.00
+    })
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/#{item1.id}", headers: headers, params: JSON.generate(item: item_params)
+
+      response_body = JSON.parse(response.body, symbolize_names: true)
+      item = response_body[:data]
+
+      expect(item).to be_a(Hash)
+
+      expect(item).to have_key(:id)
+      expect(item).to have_key(:type)
+      expect(item).to have_key(:attributes)
+      expect(item[:attributes].keys).to eq([:name, :description, :unit_price, :merchant_id])
   end
 end
