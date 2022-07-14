@@ -25,12 +25,8 @@ class Api::V1::ItemsController < ApplicationController
 
   def update
     item = Item.find(params[:id])
-    item.update(item_params)
-    if item.save
-      render json: ItemSerializer.format_item(item), status: 200
-    else
-      render json: item.errors, status: :unprocessable_entity
-    end
+    item.update!(item_params)
+    render json: ItemSerializer.format_item(item), status: 200
   end
 
   private
