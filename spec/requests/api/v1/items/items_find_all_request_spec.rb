@@ -31,6 +31,20 @@ RSpec.describe "E-Commerce API: Items Find All" do
     end
   end
 
-  xit "Searches through items for prices that qualify, and returns all that match" do
+  it "Searches through items for prices that are above the query, and returns all that match" do
+    merchant = Merchant.create!(name: "SomeStore SomeStuff")
+    Item.create!(name: "Bubbles", description: "Soapy, shiny, bubbly bubbles", unit_price: 99.90, merchant_id: merchant.id)
+    Item.create!(name: "Cheese", description: "Da cheddar", unit_price: 10.99, merchant_id: merchant.id)
+    Item.create!(name: "Fabreeze", description: "Smells like sunshine", unit_price: 100.90, merchant_id: merchant.id)
+    get "/api/v1/items/find_all?min_price=50"
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    items = response_body[:data]
+
+    expect(items).to be_a(Array)
+    expect(items.count).to eq(2)
+    items.each do |item|
+      expect(item[:attributes][:name]).to_not eq("Cheese")
+    end
   end
 end
