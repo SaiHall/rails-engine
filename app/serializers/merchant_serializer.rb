@@ -28,7 +28,7 @@ class MerchantSerializer
 
   def self.no_match
     {
-      data: nil
+      data: {}
     }
   end
 end
