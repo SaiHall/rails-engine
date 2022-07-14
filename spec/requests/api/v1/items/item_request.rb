@@ -65,4 +65,22 @@ RSpec.describe "E-Commerce API: Item" do
       expect(response.status).to eq(204)
       expect(merchant.items.count).to eq(3)
   end
+
+  it 'can update an item' do
+    create_list(:merchant, 1)
+
+    item1 = Item.all.first
+    original = item1.attributes
+
+    item_params = ({
+    "name": "Humidifier"
+    })
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/#{item1.id}", headers: headers, params: JSON.generate(item: item_params)
+
+
+    expect(response).to be_successful
+    expect(response.status).to eq(200)
+  end
 end
