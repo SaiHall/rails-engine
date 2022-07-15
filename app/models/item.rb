@@ -5,6 +5,7 @@ class Item < ApplicationRecord
   validates_presence_of :merchant_id
 
   belongs_to :merchant
+  has_many :invoice_items, dependent: :destroy
 
   def self.search_name(query)
     where("name ILIKE ?", "%#{query}%").order(:name)
